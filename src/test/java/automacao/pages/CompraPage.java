@@ -1,4 +1,4 @@
-package com.miniprojeto.automacao.pages;
+package automacao.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

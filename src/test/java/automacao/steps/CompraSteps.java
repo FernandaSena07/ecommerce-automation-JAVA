@@ -1,7 +1,7 @@
-package com.miniprojeto.automacao.steps;
+package automacao.steps;
 
-import com.miniprojeto.automacao.pages.CompraPage;
-import com.miniprojeto.automacao.pages.LoginPage;
+import automacao.pages.CompraPage;
+import automacao.pages.LoginPage;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;

@@ -10,7 +10,8 @@ pipeline {
 
         stage('Build and Test') {
             steps {
-                sh 'mvn clean install'
+                // Mude de 'sh' para 'bat' para rodar em Windows
+                bat 'mvn clean install'
             }
         }
     }

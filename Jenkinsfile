@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/FernandaSena07/ecommerce-automation-JAVA.git'
+                git branch: 'main', url: 'https://github.com/FernandaSena07/ecommerce-automation-JAVA.git'
             }
         }
 

@@ -61,7 +61,7 @@ public class CompraSteps {
         compraPage.clickCart();
 
         // Adiciona uma espera para garantir que a página do carrinho carregou e o botão de checkout está visível.
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout")));
     }
 

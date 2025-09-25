@@ -1,32 +1,29 @@
 pipeline {
     agent any 
 
-    // Opcional: Define a variável de ambiente (boa prática)
     environment {
+        // Define onde o Maven gera os resultados
         ALLURE_RESULTS_DIR = 'target/allure-results' 
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                // Puxa o código do GitHub usando a configuração do Job
-                checkout scm
-            }
-        }
+        // REMOVER O CHECKOUT EVITA O ERRO DO SCM, MAS REQUER QUE O CÓDIGO JÁ ESTEJA LÁ
+        // stage('Checkout Code') { /* REMOVIDO */ }
         
         stage('Run Tests') {
             steps {
+                echo 'Iniciando testes Maven...'
                 // Comando para rodar em Windows
                 bat 'mvn clean install'
             }
         }
         
-        // ESTÁGIO CRUCIAL QUE PRECISA ESTAR NO ARQUIVO
         stage('Publish Allure Report') {
             steps {
+                echo 'Publicando Relatório Allure...'
+                // Publica o relatório usando o plugin Allure
                 allure([
                     includeProperties: false, 
-                    // Caminho para a pasta onde o Maven gerou os resultados
                     results: [[path: env.ALLURE_RESULTS_DIR]]
                 ])
             }

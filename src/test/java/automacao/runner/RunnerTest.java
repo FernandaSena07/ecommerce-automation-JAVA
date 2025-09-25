@@ -7,8 +7,13 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = "src/test/resources/features",
-        glue = "automacao.steps", // <-- CORRIGIDO AQUI!
-        plugin = {"pretty", "html:target/cucumber-reports.html"},
+        glue = "automacao.steps",
+        plugin = {
+                "pretty",
+                "html:target/cucumber-reports.html",
+                "json:target/cucumber.json",
+                "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm" // Plugin do Allure
+        },
         monochrome = true
 )
 public class RunnerTest {

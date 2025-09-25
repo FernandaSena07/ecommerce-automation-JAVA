@@ -15,6 +15,8 @@
         <junit.version>4.13.2</junit.version>
         <cucumber.version>7.18.0</cucumber.version>
         <selenium.version>4.20.0</selenium.version>
+        <allure.version>2.27.0</allure.version>
+        <aspectj.version>1.9.19</aspectj.version>
     </properties>
 
     <dependencies>
@@ -72,6 +74,22 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-cucumber7-jvm</artifactId> <version>${allure.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.cucumber</groupId>
+                    <artifactId>messages</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit4</artifactId> <version>${allure.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -94,7 +112,22 @@
                     <includes>
                         <include>**/RunnerTest.java</include>
                     </includes>
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -Dcucumber.publish.quiet=true
+                        -Dallure.results.directory=${project.build.directory}/allure-results
+                    </argLine>
+                    <systemPropertyVariables>
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+                    </systemPropertyVariables>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

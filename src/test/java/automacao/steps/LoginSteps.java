@@ -10,6 +10,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.time.Duration;
+
 import static org.junit.Assert.assertTrue;
 
 public class LoginSteps {
@@ -23,22 +25,25 @@ public class LoginSteps {
 
         ChromeOptions options = new ChromeOptions();
 
-        // Opções anti-senha:
+        // Opções anti-senha
         options.addArguments("--disable-features=PasswordManagerRedesign");
         options.addArguments("--disable-save-password-bubble");
 
-        // 💥 OPÇÕES CRUCIAIS PARA ESTABILIDADE NO JENKINS 💥
+        // Estabilidade no Jenkins
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-infobars");
+        options.addArguments("--headless=new"); // ✅ modo headless para CI/CD
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // ✅ espera implícita
         driver.get("https://www.saucedemo.com");
         loginPage = new LoginPage(driver);
     }
+
 
     @When("preencho o campo de usuario com {string}")
     public void preenchoOCampoDeUsuarioCom(String usuario) {

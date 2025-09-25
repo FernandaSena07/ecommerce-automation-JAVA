@@ -21,10 +21,18 @@ public class LoginSteps {
     public void queEstouNaPaginaDeLogin() {
         WebDriverManager.chromedriver().setup();
 
-        // Código para desabilitar o pop-up do Chrome
         ChromeOptions options = new ChromeOptions();
+
+        // Opções anti-senha:
         options.addArguments("--disable-features=PasswordManagerRedesign");
         options.addArguments("--disable-save-password-bubble");
+
+        // 💥 OPÇÕES CRUCIAIS PARA ESTABILIDADE NO JENKINS 💥
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-notifications");
+        options.addArguments("--disable-extensions");
+        options.addArguments("--disable-infobars");
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();

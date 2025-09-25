@@ -4,14 +4,26 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/FernandaSena07/ecommerce-automation-JAVA.git'
+                // Esta etapa usa o SCM que você já configurou no job
+                checkout scm
             }
         }
 
         stage('Build and Test') {
             steps {
-                // Mude de 'sh' para 'bat' para rodar em Windows
+                // Comando para rodar em Windows
                 bat 'mvn clean install'
+            }
+        }
+        
+        stage('Publish Allure Report') {
+            // Este passo usa o plugin Allure para ler os resultados do Maven
+            steps {
+                allure([
+                    includeProperties: false, 
+                    // Caminho para a pasta onde o Maven gera os resultados
+                    results: [[path: 'target/allure-results']]
+                ])
             }
         }
     }

@@ -2,6 +2,7 @@ package automacao.steps;
 
 import automacao.pages.CompraPage;
 import automacao.pages.LoginPage;
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -34,16 +35,17 @@ public class CompraSteps {
 
         ChromeOptions options = new ChromeOptions();
 
-        // Suas opções originais anti-senha:
+        // Anti-senha
         options.addArguments("--disable-features=PasswordManagerRedesign");
         options.addArguments("--disable-save-password-bubble");
 
-        // 💥 OPÇÕES CRUCIAIS PARA ESTABILIDADE NO JENKINS 💥
+        // Estabilidade no Jenkins
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--disable-notifications");
         options.addArguments("--disable-extensions");
         options.addArguments("--disable-infobars");
+        options.addArguments("--headless=new"); // headless para CI/CD
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
@@ -64,20 +66,20 @@ public class CompraSteps {
         driver.findElement(By.xpath(xpath)).click();
     }
 
-    // O CÓDIGO CORRIGIDO
     @And("clico no carrinho")
     public void clico_no_carrinho() {
         compraPage.clickCart();
 
-        // Adiciona uma espera para garantir que a página do carrinho carregou e o botão de checkout está visível.
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        // espera a URL correta
+        wait.until(ExpectedConditions.urlContains("cart.html"));
+        // espera o botão de checkout
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("checkout")));
     }
 
     @And("clico no botão de checkout")
     public void clico_no_botão_de_checkout() {
         compraPage.clickCheckout();
-        // A espera explícita é adicionada aqui para garantir que a próxima página seja carregada
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("first-name")));
     }
@@ -101,10 +103,7 @@ public class CompraSteps {
     public void devo_ver_a_mensagem_de_compra_finalizada_com_sucesso() {
         String expectedMessage = "Thank you for your order!";
         assertEquals(expectedMessage, compraPage.getSuccessMessage());
-        driver.quit();
     }
-
-    // NOVOS MÉTODOS PARA O CENÁRIO DE FILTRO
 
     @When("filtro os produtos por {string}")
     public void filtro_os_produtos_por(String option) {
@@ -125,7 +124,12 @@ public class CompraSteps {
         Collections.sort(sortedPrices);
 
         assertEquals(sortedPrices, actualPrices);
+    }
 
-        driver.quit();
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
